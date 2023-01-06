@@ -1,0 +1,38 @@
+---
+import { TextSection } from '@littlesticks/odyssey-theme-components';
+import Layout from '../../layouts/Page.astro';
+import HeroSection from '../../components/sections/heros/HeroSection.astro';
+
+const seo = {
+	title: 'Projects | Animations',
+	description: 'My Projects in animation and related subjects',
+};
+---
+
+<Layout {seo}>
+	<HeroSection>
+		<div slot="text-container">
+			<h1>Animations</h1>
+			<p>
+				Individual works, short films, and snippets.
+			</p>
+		</div>
+    <picture slot="image-container">
+      <img
+        src="/assets/images/home/classic-hero.jpg"
+        alt="Astro Odyssee"
+        id="home-hero-image"
+      />
+    </picture>
+	</HeroSection>
+  <TextSection narrow>
+    <p>
+      The End of the World - Music Video
+    </p>
+    <p>Video Goes Here</p>
+    <p>
+      Pirates on the Seas
+    </p>
+    <p>Video Goes Here</p>
+  </TextSection>
+</Layout>
