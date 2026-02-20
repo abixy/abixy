@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gambler's Fallacy Simulator</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 30px;
+    background: #f4f4f4;
+}
+
+#output {
+    font-family: monospace;
+    font-size: 20px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+.highlight {
+    background: yellow;
+    font-weight: bold;
+}
+
+button {
+    padding: 6px 12px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+input {
+    padding: 6px;
+    width: 120px;
+}
+
+canvas {
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+#betSection {
+    display: none;
+    margin-top: 15px;
+}
+
+#message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<h1>🎲 Gambler’s Fallacy Simulator</h1>
+
+Starting Bankroll: $
+<input type="number" id="startingBankroll" value="1000"><br><br>
+
+Total Flips:
+<input type="number" id="totalFlipsInput" value="10000"><br><br>
+
+Detect Streak Length:
+<input type="number" id="streakLengthInput" value="8"><br><br>
+
+Flip Speed:
+<input type="range" id="speedSlider" min="10" max="500" value="100" oninput="updateSpeedLabel()">
+<span id="speedLabel">100 ms</span><br><br>
+
+<button onclick="startGame()">Start</button>
+
+<div id="bankrollDisplay"></div>
+<div id="flipCounter"></div>
+<div id="output"></div>
+
+<div id="betSection">
+<p>🔥 Streak Detected! Bet that the streak will END:</p>
+
+Bet Amount: $
+<input type="number" id="betAmount"><br><br>
+
+<button onclick="placeManualBet()">Place Manual Bet</button>
+<button onclick="startMartingale()">Auto Martingale</button>
+</div>
+
+<div id="message"></div>
+
+<canvas id="bankrollChart" width="600" height="200"></canvas>
+
+<script>
+let bankroll = 0;
+let sequence = "";
+let currentStreak = 0;
+let currentType = "";
+let flipping = false;
+let totalFlips = 0;
+let flipCount = 0;
+let streakLength = 8;
+let bankrollHistory = [];
+let martingaleActive = false;
+let martingaleBet = 0;
+
+function updateSpeedLabel(){
+    let val = document.getElementById("speedSlider").value;
+    document.getElementById("speedLabel").textContent = val + " ms";
+}
+
+function randomFlip(){
+    return Math.random() < 0.5 ? "H" : "T";
+}
+
+function startGame(){
+    bankroll = parseFloat(document.getElementById("startingBankroll").value);
+    totalFlips = parseInt(document.getElementById("totalFlipsInput").value);
+    streakLength = parseInt(document.getElementById("streakLengthInput").value);
+
+    if(isNaN(bankroll)||bankroll<=0||isNaN(totalFlips)||totalFlips<=0||isNaN(streakLength)||streakLength<=0){
+        alert("Enter valid inputs.");
+        return;
+    }
+
+    sequence="";
+    currentStreak=0;
+    currentType="";
+    flipCount=0;
+    flipping=true;
+    bankrollHistory=[bankroll];
+    martingaleActive=false;
+
+    document.getElementById("betSection").style.display="none";
+    document.getElementById("message").textContent="";
+
+    updateDisplay();
+    drawChart();
+    autoFlip();
+}
+
+function autoFlip(){
+    if(!flipping) return;
+    if(flipCount>=totalFlips){ endSimulation("Reached flip limit."); return; }
+
+    let flip=randomFlip();
+    sequence+=flip;
+    flipCount++;
+
+    if(flip===currentType){
+        currentStreak++;
+    } else {
+        currentType=flip;
+        currentStreak=1;
+    }
+
+    updateDisplay();
+
+    if(currentStreak>=streakLength){
+        flipping=false;
+        document.getElementById("betSection").style.display="block";
+        return;
+    }
+
+    let currentSpeed = parseInt(document.getElementById("speedSlider").value);
+    setTimeout(autoFlip, currentSpeed);
+}
+
+function placeManualBet(){
+    let bet=parseFloat(document.getElementById("betAmount").value);
+    if(isNaN(bet)||bet<=0||bet>bankroll){
+        alert("Invalid bet.");
+        return;
+    }
+    resolveBet(bet);
+}
+
+function startMartingale(){
+    let startingBet = parseFloat(document.getElementById("betAmount").value);
+
+    if(isNaN(startingBet) || startingBet <= 0){
+        alert("Enter a valid starting bet in the bet box.");
+        return;
+    }
+
+    if(startingBet > bankroll){
+        alert("Starting bet cannot exceed bankroll.");
+        return;
+    }
+
+    martingaleActive = true;
+    martingaleBet = startingBet;
+
+    document.getElementById("message").textContent =
+        "🤖 Martingale started at $" + martingaleBet.toFixed(2);
+
+    martingaleStep();
+}
+
+function martingaleStep(){
+    if(!martingaleActive) return;
+    if(martingaleBet>bankroll){
+        endSimulation("Martingale failed — insufficient bankroll.");
+        return;
+    }
+    resolveBet(martingaleBet,true);
+}
+
+function resolveBet(bet,isAuto=false){
+    if(flipCount>=totalFlips){ endSimulation("Reached flip limit."); return; }
+
+    let flip=randomFlip();
+    sequence+=flip;
+    flipCount++;
+
+    let streakContinues = (flip===currentType);
+    let win=!streakContinues; // We ONLY bet streak ends
+
+    if(win){
+        bankroll+=bet*2;
+        document.getElementById("message").textContent="✅ Won $" + (bet*2).toFixed(2);
+        martingaleActive=false;
+    } else {
+        bankroll-=bet;
+        document.getElementById("message").textContent="❌ Lost $" + bet.toFixed(2);
+        if(isAuto){
+            martingaleBet*=2;
+        }
+    }
+
+    if(streakContinues){
+        currentStreak++;
+    } else {
+        currentType=flip;
+        currentStreak=1;
+    }
+
+    bankrollHistory.push(bankroll);
+    updateDisplay();
+    drawChart();
+
+    if(bankroll<=0){ endSimulation("You're broke."); return; }
+
+    if(currentStreak>=streakLength){
+        if(martingaleActive){
+            setTimeout(martingaleStep,300);
+        }
+    } else {
+        document.getElementById("betSection").style.display="none";
+        setTimeout(()=>{
+            document.getElementById("message").textContent="";
+            flipping=true;
+            autoFlip();
+        },1000);
+    }
+}
+
+function updateDisplay(){
+    document.getElementById("output").innerHTML=highlight(sequence);
+    document.getElementById("bankrollDisplay").textContent="Bankroll: $"+bankroll.toFixed(2);
+    document.getElementById("flipCounter").textContent="Flips: "+flipCount+" / "+totalFlips;
+}
+
+function highlight(seq){
+    if(currentStreak>=streakLength){
+        return seq.slice(0,-currentStreak)+
+        `<span class="highlight">${seq.slice(-currentStreak)}</span>`;
+    }
+    return seq;
+}
+
+function drawChart(){
+    let canvas=document.getElementById("bankrollChart");
+    let ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(bankrollHistory.length<2) return;
+
+    let max=Math.max(...bankrollHistory);
+    let min=Math.min(...bankrollHistory);
+
+    ctx.beginPath();
+    for(let i=0;i<bankrollHistory.length;i++){
+        let x=(i/(bankrollHistory.length-1))*canvas.width;
+        let y=canvas.height-((bankrollHistory[i]-min)/(max-min+1))*canvas.height;
+        if(i===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+}
+
+function endSimulation(reason){
+    flipping=false;
+    martingaleActive=false;
+    document.getElementById("betSection").style.display="none";
+    document.getElementById("message").textContent="Simulation ended: "+reason;
+}
+
+updateSpeedLabel();
+</script>
+
+</body>
+</html>
