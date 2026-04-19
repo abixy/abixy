@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CozyBoard</title>
 
   <style>
@@ -15,41 +14,95 @@
     }
 
     .container {
-      max-width: 720px;
-      margin: 80px auto;
+      max-width: 900px;
+      margin: 60px auto;
       padding: 20px;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .icon {
+      width: 72px;
+      border-radius: 16px;
+      margin-bottom: 12px;
     }
 
     h1 {
       font-size: 2.4rem;
-      margin-bottom: 8px;
+      margin: 0;
     }
 
     .subtitle {
       color: #cbd5e1;
+      margin-top: 8px;
+    }
+
+    .sign {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 24px;
+      border-radius: 16px;
+      opacity: 0.9;
+    }
+
+    /* CTA */
+    .cta {
+      display: block;
+      text-align: center;
+      background: rgba(255,255,255,0.08);
+      padding: 18px;
+      border-radius: 18px;
+      text-decoration: none;
+      color: white;
+      margin: 30px 0;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .cta:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+
+    /* GALLERY */
+    .gallery {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 10px;
       margin-bottom: 40px;
     }
 
+    .gallery img {
+      height: 380px;
+      border-radius: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* CARDS */
     .card {
       display: block;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 20px 22px;
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
       margin-bottom: 16px;
       border-radius: 18px;
       text-decoration: none;
       color: inherit;
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255,255,255,0.08);
       transition: all 0.2s ease;
     }
 
     .card:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.08);
       transform: translateY(-2px);
     }
 
     .title {
-      font-size: 1.1rem;
       font-weight: 600;
     }
 
@@ -57,16 +110,6 @@
       font-size: 0.9rem;
       color: #94a3b8;
       margin-top: 4px;
-    }
-
-    .spacer {
-      height: 20px;
-    }
-
-    footer {
-      margin-top: 40px;
-      font-size: 0.8rem;
-      color: #64748b;
     }
 
     .back {
@@ -80,25 +123,46 @@
     .back:hover {
       color: #e2e8f0;
     }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #64748b;
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <a class="card" href="#">
-      <div class="title">Get CozyBoard</div>
-      <div class="desc">
-        <img src="/apps/cozyboard/assets/icon.png" width="72" style="border-radius:16px;margin-bottom:16px;"> Available on Google Play.
-      </div>
-    </a>
 
     <a class="back" href="/">← Back to Abixy</a>
 
-    <h1>CozyBoard</h1>
-    <div class="subtitle">
-      Ambient soundboard for focus, relaxation, and calm.
+    <!-- HERO -->
+    <div class="hero">
+      <img class="icon" src="/apps/cozyboard/assets/icon.png" />
+      <h1>CozyBoard</h1>
+      <div class="subtitle">
+        Ambient soundboard for focus, relaxation, and calm.
+      </div>
+
+      <img class="sign" src="/apps/cozyboard/assets/cozyboard-sign.png" />
     </div>
 
+    <!-- CTA -->
+    <a class="cta" href="#">
+      Get CozyBoard on Google Play
+    </a>
+
+    <!-- SCREENSHOT GALLERY -->
+    <div class="gallery">
+      <img src="/apps/cozyboard/assets/screenshot1.png">
+      <img src="/apps/cozyboard/assets/screenshot2.png">
+      <img src="/apps/cozyboard/assets/screenshot3.png">
+      <img src="/apps/cozyboard/assets/screenshot4.png">
+    </div>
+
+    <!-- LINKS -->
     <a class="card" href="/apps/cozyboard/privacy.html">
       <div class="title">Privacy Policy</div>
       <div class="desc">
@@ -113,16 +177,9 @@
       </div>
     </a>
 
-    <div>
-      <img src="/apps/cozyboard/assets/cozyboard-sign.png">
-    </div>
-
-    <div class="spacer"></div>
-
     <footer>
       © Abixy Development
     </footer>
   </div>
 </body>
-
 </html>
