@@ -1,0 +1,24 @@
+# OS junk
+.DS_Store
+Thumbs.db
+README.txt
+
+# Editor folders
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Node (only if you ever use build tools)
+node_modules/
+
+# Expo / React builds (if you copy builds here)
+.expo/
+dist/
+build/
+web-build/
+
+# Temp files
+*.tmp
+*.bak

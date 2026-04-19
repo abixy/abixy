@@ -1,15 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Abixy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Abixy Development</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+      background: #f5f7fa;
+      color: #1a1a1a;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      display: block;
+      background: white;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .desc {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
-  <h1>Abixy</h1>
-  <p>Apps & Tools</p>
+  <div class="container">
+    <h1>Abixy Development</h1>
+    <p>Simple tools and apps, built with care.</p>
 
-  <ul>
-    <li><a href="/apps/tool-name/">Web Tool</a></li>
-    <li><a href="/apps/cozyboard/">CozyBoard</a></li>
-  </ul>
+    <a class="card" href="/apps/gamblersfallacy/">
+      <div class="title">Abixy Gambler's Fallacy Disproven</div>
+      <div class="desc">We attempt to disprove the Gambler's Fallacy.  See for yourself.</div>
+    </a>
+
+    <a class="card" href="/apps/cozyboard/">
+      <div class="title">CozyBoard (mobile app)</div>
+      <div class="desc">A relaxing soundboard experience.</div>
+    </a>
+
+    <a class="card" href="/apps/thegameyouwant/">
+      <div class="title">The Game You Want (mobile app)</div>
+      <div class="desc">This is the mobile app game that is featured in all the ads.  Here it is for free.</div>
+    </a>
+
+    <footer>
+      © Abixy Development
+    </footer>
+  </div>
 </body>
 </html>
