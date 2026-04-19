@@ -9,8 +9,25 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-      background: linear-gradient(180deg, #1e2a38, #121a24);
+      background: #121a24;
       color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    /* 🌌 AMBIENT BACKGROUND */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(circle at 20% 30%, #2a3b4f, transparent 40%),
+                  radial-gradient(circle at 80% 70%, #1e2a38, transparent 50%),
+                  radial-gradient(circle at 50% 50%, #121a24, #0b1118);
+      animation: drift 20s infinite alternate ease-in-out;
+    }
+
+    @keyframes drift {
+      0% { transform: scale(1) translate(0,0); }
+      100% { transform: scale(1.1) translate(-20px, 10px); }
     }
 
     .container {
@@ -19,16 +36,22 @@
       padding: 20px;
     }
 
-    /* HERO */
     .hero {
       text-align: center;
       margin-bottom: 40px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
     .icon {
       width: 72px;
       border-radius: 16px;
       margin-bottom: 12px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.08);
     }
 
     h1 {
@@ -49,7 +72,7 @@
       opacity: 0.9;
     }
 
-    /* CTA */
+    /* ✨ CTA */
     .cta {
       display: block;
       text-align: center;
@@ -60,31 +83,48 @@
       color: white;
       margin: 30px 0;
       font-weight: 600;
-      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .cta:hover::after {
+      opacity: 1;
     }
 
     .cta:hover {
-      background: rgba(255,255,255,0.12);
       transform: translateY(-2px);
     }
 
-    /* GALLERY */
+    /* 🖼 GALLERY */
     .gallery {
       display: flex;
       gap: 16px;
       overflow-x: auto;
-      padding-bottom: 10px;
       margin-bottom: 40px;
     }
 
     .gallery img {
       height: 380px;
       border-radius: 18px;
-      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s ease;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
 
-    /* CARDS */
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* 📦 CARDS */
     .card {
       display: block;
       background: rgba(255,255,255,0.05);
@@ -120,41 +160,56 @@
       text-decoration: none;
     }
 
-    .back:hover {
-      color: #e2e8f0;
-    }
-
     footer {
       margin-top: 40px;
       font-size: 0.8rem;
       color: #64748b;
       text-align: center;
     }
+
+    /* 🪟 MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
   </style>
 </head>
 
 <body>
+  <div class="bg"></div>
+
   <div class="container">
 
     <a class="back" href="/">← Back to Abixy</a>
 
-    <!-- HERO -->
     <div class="hero">
       <img class="icon" src="/apps/cozyboard/assets/icon.png" />
       <h1>CozyBoard</h1>
       <div class="subtitle">
         Ambient soundboard for focus, relaxation, and calm.
       </div>
-
       <img class="sign" src="/apps/cozyboard/assets/cozyboard-sign.png" />
     </div>
 
-    <!-- CTA -->
     <a class="cta" href="#">
       Get CozyBoard on Google Play
     </a>
 
-    <!-- SCREENSHOT GALLERY -->
     <div class="gallery">
       <img src="/apps/cozyboard/assets/screenshot1.png">
       <img src="/apps/cozyboard/assets/screenshot2.png">
@@ -162,24 +217,41 @@
       <img src="/apps/cozyboard/assets/screenshot4.png">
     </div>
 
-    <!-- LINKS -->
     <a class="card" href="/apps/cozyboard/privacy.html">
       <div class="title">Privacy Policy</div>
-      <div class="desc">
-        Learn how CozyBoard handles your data and protects your privacy.
-      </div>
+      <div class="desc">Learn how your data is handled.</div>
     </a>
 
     <a class="card" href="/apps/cozyboard/support.html">
       <div class="title">Support</div>
-      <div class="desc">
-        Need help or have feedback? Get in touch here.
-      </div>
+      <div class="desc">Questions or feedback? Reach out.</div>
     </a>
 
     <footer>
       © Abixy Development
     </footer>
   </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <img id="modalImg">
+  </div>
+
+  <script>
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+
+    document.querySelectorAll('.gallery img').forEach(img => {
+      img.onclick = () => {
+        modal.classList.add('active');
+        modalImg.src = img.src;
+      };
+    });
+
+    modal.onclick = () => {
+      modal.classList.remove('active');
+    };
+  </script>
+
 </body>
 </html>
